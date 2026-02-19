@@ -47,7 +47,7 @@
     }
     .header-text h1 {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(0.8rem, 2vw, 1.3rem);
+      font-size: clamp(0.82rem, 2.2vw, 1.35rem);
       font-weight: 900; color: #fff; line-height: 1.2;
     }
     .live-badge {
@@ -74,19 +74,12 @@
       border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
       box-shadow: 0 1px 4px rgba(30,58,138,0.06);
     }
-    .filters-title {
-      font-size: 0.8rem; font-weight: 700; color: var(--texto); margin-bottom: 10px;
-    }
-    .filters-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
+    .filters-title { font-size: 0.8rem; font-weight: 700; color: var(--texto); margin-bottom: 10px; }
+    .filters-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .filters-grid .full { grid-column: 1 / -1; }
     label {
-      font-size: 0.65rem; color: var(--texto-dim);
-      margin-bottom: 3px; display: block; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .04em;
+      font-size: 0.65rem; color: var(--texto-dim); margin-bottom: 3px;
+      display: block; font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
     }
     select, input[type="text"] {
       width: 100%; padding: 7px 9px;
@@ -107,7 +100,7 @@
     }
     .result-count { font-size: 0.7rem; color: var(--texto-dim); }
     .result-count strong { color: var(--azul); }
-    .last-update { font-size: 0.65rem; color: var(--texto-dim); }
+    .last-update  { font-size: 0.65rem; color: var(--texto-dim); }
     .last-update span { color: var(--azul-vivo); font-weight: 600; }
 
     /* ─── TABLA ─── */
@@ -122,26 +115,32 @@
       max-height: 68vh;
       -webkit-overflow-scrolling: touch;
     }
-    .table-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
-    .table-scroll::-webkit-scrollbar-track { background: var(--surface2); }
-    .table-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    .table-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .table-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+    .table-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
 
+    /*
+      ESTRATEGIA DE COLUMNAS:
+      - table-layout: auto  → el navegador calcula anchos reales
+      - max-width en cada td → limita el ancho máximo
+      - overflow: hidden + text-overflow: ellipsis + white-space: nowrap
+        → muestra "..." cuando el texto no cabe
+      - title en cada celda → tooltip con texto completo al pasar el mouse
+    */
     table {
-      width: 100%;            /* usa el ancho disponible */
+      width: 100%;
       border-collapse: collapse;
-      table-layout: fixed;    /* ← CLAVE: distribuye columnas de forma controlada */
+      table-layout: auto;
     }
 
     thead { position: sticky; top: 0; z-index: 5; }
     thead th {
       background: var(--azul); color: #fff;
-      font-size: 0.6rem; font-weight: 700;
+      font-size: 0.63rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: .06em;
-      padding: 8px 8px; text-align: left;
-      white-space: nowrap;    /* cabeceras en una línea */
-      overflow: hidden;
-      text-overflow: ellipsis;
-      border-right: 1px solid rgba(255,255,255,0.1);
+      padding: 9px 8px; text-align: left;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255,255,255,0.12);
     }
     thead th:last-child { border-right: none; }
 
@@ -149,16 +148,18 @@
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #eff6ff; }
 
+    /* Celda base: trunca el texto con "..." */
     tbody td {
-      padding: 6px 8px;
-      vertical-align: top;       /* alineado arriba cuando hay salto de línea */
-      font-size: 0.72rem;
+      padding: 7px 8px;
+      font-size: 0.73rem;
       color: var(--texto);
-      word-break: break-word;    /* rompe palabras largas */
-      white-space: normal;       /* permite salto de línea */
-      overflow: hidden;
-      line-height: 1.35;
+      max-width: 160px;          /* ancho máximo por celda        */
+      white-space: nowrap;       /* texto en una sola línea        */
+      overflow: hidden;          /* oculta lo que sobra            */
+      text-overflow: ellipsis;   /* muestra "..." al final         */
+      cursor: default;
     }
+    /* al pasar el mouse se ve el contenido completo (via title) */
 
     tr.disponible { background: var(--verde-bg); }
     tr.disponible:hover { background: #dcfce7; }
@@ -166,8 +167,8 @@
     tr.adjudicada:hover { background: #fee2e2; }
 
     .badge {
-      display: inline-block; padding: 2px 7px; border-radius: 20px;
-      font-size: 0.6rem; font-weight: 700; white-space: nowrap;
+      display: inline-block; padding: 2px 8px; border-radius: 20px;
+      font-size: 0.62rem; font-weight: 700; white-space: nowrap;
     }
     .badge-disponible { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
     .badge-adjudicada { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
@@ -176,8 +177,7 @@
     .scroll-hint {
       text-align: center; font-size: 0.63rem; color: var(--texto-dim);
       padding: 5px; background: var(--surface2);
-      border-top: 1px solid var(--borde);
-      display: none;
+      border-top: 1px solid var(--borde); display: none;
     }
 
     /* ─── CARGA / ERROR ─── */
@@ -214,8 +214,7 @@
     /* ─── MÓVIL ─── */
     @media (max-width: 639px) {
       .scroll-hint { display: block; }
-      /* en móvil la tabla hace scroll horizontal si es necesario */
-      table { table-layout: auto; width: max-content; min-width: 100%; }
+      tbody td { max-width: 120px; }
     }
   </style>
 </head>
@@ -272,7 +271,7 @@
       <p style="color:var(--texto-dim);font-size:.8rem">Cargando datos…</p>
     </div>
     <div class="table-scroll" id="table-container" style="display:none">
-      <table id="main-table">
+      <table>
         <thead id="table-head"></thead>
         <tbody id="table-body"></tbody>
       </table>
@@ -333,34 +332,6 @@
     sel.value = cur;
   }
 
-  // Asigna anchos proporcionales según tipo de columna
-  function setColumnWidths(hdrs) {
-    const colgroup = document.createElement("colgroup");
-    hdrs.forEach(h => {
-      const col = document.createElement("col");
-      const name = h.toUpperCase();
-      // columnas cortas: número, código, tipo
-      if (name.includes("N°") || name.includes("NRO") || name === "Nº" ||
-          name.includes("COD") || name.includes("TIPO") || name.includes("J.L") ||
-          name.includes("HORAS") || name.includes("JL"))          col.style.width = "55px";
-      // columnas medianas: nivel, cargo, estado, característica
-      else if (name.includes("NIVEL") || name.includes("CARGO") ||
-               name.includes("ESTADO") || name.includes("CARACT") ||
-               name.includes("MODELO"))                            col.style.width = "100px";
-      // columnas largas: nombre IE, especialidad, docente
-      else if (name.includes("INSTITUCION") || name.includes("IE") ||
-               name.includes("NOMBRE") || name.includes("ESPECIA") ||
-               name.includes("OCUPA") || name.includes("DOCENTE")) col.style.width = "160px";
-      // resto: ancho medio
-      else                                                          col.style.width = "90px";
-      colgroup.appendChild(col);
-    });
-    const table = document.getElementById("main-table");
-    const existing = table.querySelector("colgroup");
-    if (existing) table.removeChild(existing);
-    table.insertBefore(colgroup, table.firstChild);
-  }
-
   function applyFilters() {
     const nivel  = document.getElementById("f-nivel").value.toLowerCase();
     const cargo  = document.getElementById("f-cargo").value.toLowerCase();
@@ -384,27 +355,38 @@
     const thead = document.getElementById("table-head");
     const tbody = document.getElementById("table-body");
 
+    // Cabecera solo la primera vez
     if (!thead.innerHTML)
-      thead.innerHTML = "<tr>" + headers.map(h => `<th title="${h}">${h}</th>`).join("") + "</tr>";
+      thead.innerHTML = "<tr>" +
+        headers.map(h => `<th title="${h}">${h}</th>`).join("") +
+      "</tr>";
 
     if (!filtered.length) {
       tbody.innerHTML = `<tr><td colspan="${headers.length}"
-        style="text-align:center;padding:32px;color:var(--texto-dim);white-space:normal;font-size:.78rem">
+        style="text-align:center;padding:32px;color:var(--texto-dim);
+               white-space:normal;font-size:.78rem;max-width:none">
         No se encontraron plazas con los filtros seleccionados.</td></tr>`;
       return;
     }
 
     tbody.innerHTML = filtered.map(row => {
       const est = colEstado >= 0 ? (row[colEstado] || "").trim().toUpperCase() : "";
-      const cls = est === "ADJUDICADA" ? "adjudicada" : est === "DISPONIBLE" ? "disponible" : "";
+      const cls = est === "ADJUDICADA" ? "adjudicada"
+                : est === "DISPONIBLE" ? "disponible" : "";
+
       const cells = row.map((cell, i) => {
+        const val = (cell !== undefined && cell !== "") ? cell : "—";
+
         if (i === colEstado) {
           const bc = est === "DISPONIBLE" ? "badge-disponible"
                    : est === "ADJUDICADA" ? "badge-adjudicada" : "badge-default";
-          return `<td><span class="badge ${bc}">${cell || "—"}</span></td>`;
+          // badge no necesita truncar
+          return `<td style="max-width:none"><span class="badge ${bc}">${val}</span></td>`;
         }
-        return `<td>${cell !== undefined && cell !== "" ? cell : "—"}</td>`;
+        // title muestra el texto completo al pasar el mouse
+        return `<td title="${val}">${val}</td>`;
       }).join("");
+
       return `<tr class="${cls}">${cells}</tr>`;
     }).join("");
   }
@@ -422,7 +404,6 @@
       if (colCargo >= 0) populateSelect("f-cargo", colCargo);
 
       if (first) {
-        setColumnWidths(headers);
         document.getElementById("estado-carga").style.display    = "none";
         document.getElementById("table-container").style.display = "block";
         ["f-nivel","f-cargo","f-estado","f-busca"].forEach(id =>
@@ -431,13 +412,15 @@
 
       applyFilters();
       document.getElementById("last-time").textContent =
-        new Date().toLocaleTimeString("es-PE", {hour:"2-digit", minute:"2-digit", second:"2-digit"});
+        new Date().toLocaleTimeString("es-PE",
+          { hour:"2-digit", minute:"2-digit", second:"2-digit" });
 
     } catch (err) {
       if (!allData.length)
         document.getElementById("estado-carga").innerHTML =
           `<div class="error-box">❌ Error: ${err.message}<br/>
-           <small>Verifica que la hoja sea pública (Compartir → Cualquier persona con el enlace).</small></div>`;
+           <small>Verifica que la hoja sea pública
+           (Compartir → Cualquier persona con el enlace).</small></div>`;
       console.error(err);
     }
   }
