@@ -34,26 +34,25 @@
     /* ─── HEADER ─── */
     header {
       background: linear-gradient(135deg, var(--azul) 0%, var(--azul-mid) 100%);
-      padding: 14px 20px;
-      display: flex; align-items: center; gap: 14px;
+      padding: 12px 16px;
+      display: flex; align-items: center; gap: 12px;
       position: sticky; top: 0; z-index: 90;
       box-shadow: 0 2px 10px rgba(30,58,138,0.3);
     }
-    header img { height: 56px; flex-shrink: 0; }
+    header img { height: 52px; flex-shrink: 0; }
     .header-text h2 {
       font-family: 'Montserrat', sans-serif;
-      font-size: 0.62rem; font-weight: 700;
+      font-size: 0.6rem; font-weight: 700;
       color: #93c5fd; letter-spacing: 0.1em; text-transform: uppercase;
-      display: none; /* oculto en móvil, visible en desktop */
     }
     .header-text h1 {
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(0.82rem, 2.2vw, 1.4rem);
+      font-size: clamp(0.8rem, 2vw, 1.3rem);
       font-weight: 900; color: #fff; line-height: 1.2;
     }
     .live-badge {
       display: inline-flex; align-items: center; gap: 5px;
-      font-size: 0.62rem; color: #fca5a5; font-weight: 700;
+      font-size: 0.6rem; color: #fca5a5; font-weight: 700;
       letter-spacing: 0.05em; margin-top: 3px;
     }
     .pulse {
@@ -67,36 +66,34 @@
     }
 
     /* ─── MAIN ─── */
-    main { max-width: 1500px; margin: 0 auto; padding: 14px 10px; }
+    main { max-width: 1500px; margin: 0 auto; padding: 12px 10px; }
 
     /* ─── FILTROS ─── */
     .filters-section {
       background: var(--surface); border: 1px solid var(--borde);
-      border-radius: 10px; padding: 14px 16px; margin-bottom: 12px;
+      border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
       box-shadow: 0 1px 4px rgba(30,58,138,0.06);
     }
     .filters-title {
-      font-size: 0.82rem; font-weight: 700; color: var(--texto);
-      margin-bottom: 10px;
+      font-size: 0.8rem; font-weight: 700; color: var(--texto); margin-bottom: 10px;
     }
     .filters-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;   /* 2 columnas en móvil */
+      grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-    .filters-grid .full { grid-column: 1 / -1; }  /* búsqueda texto: ancho completo */
-
+    .filters-grid .full { grid-column: 1 / -1; }
     label {
-      font-size: 0.68rem; color: var(--texto-dim);
+      font-size: 0.65rem; color: var(--texto-dim);
       margin-bottom: 3px; display: block; font-weight: 600;
       text-transform: uppercase; letter-spacing: .04em;
     }
     select, input[type="text"] {
-      width: 100%; padding: 8px 10px;
+      width: 100%; padding: 7px 9px;
       background: var(--surface2); border: 1.5px solid var(--borde);
       border-radius: 7px; color: var(--texto);
-      font-size: 0.8rem; font-family: 'Inter', sans-serif;
-      outline: none; transition: border-color .2s, box-shadow .2s;
+      font-size: 0.78rem; font-family: 'Inter', sans-serif;
+      outline: none; transition: border-color .2s;
     }
     select:focus, input[type="text"]:focus {
       border-color: var(--azul-vivo);
@@ -108,9 +105,9 @@
       display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 6px; flex-wrap: wrap; gap: 4px;
     }
-    .result-count { font-size: 0.72rem; color: var(--texto-dim); }
+    .result-count { font-size: 0.7rem; color: var(--texto-dim); }
     .result-count strong { color: var(--azul); }
-    .last-update { font-size: 0.67rem; color: var(--texto-dim); }
+    .last-update { font-size: 0.65rem; color: var(--texto-dim); }
     .last-update span { color: var(--azul-vivo); font-weight: 600; }
 
     /* ─── TABLA ─── */
@@ -122,27 +119,28 @@
     .table-scroll {
       overflow-x: auto;
       overflow-y: auto;
-      max-height: 65vh;
+      max-height: 68vh;
       -webkit-overflow-scrolling: touch;
     }
-    /* scrollbar delgado */
-    .table-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .table-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
     .table-scroll::-webkit-scrollbar-track { background: var(--surface2); }
     .table-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
 
     table {
-      width: max-content;
-      min-width: 100%;
+      width: 100%;            /* usa el ancho disponible */
       border-collapse: collapse;
+      table-layout: fixed;    /* ← CLAVE: distribuye columnas de forma controlada */
     }
+
     thead { position: sticky; top: 0; z-index: 5; }
     thead th {
       background: var(--azul); color: #fff;
-      font-family: 'Inter', sans-serif;
-      font-size: 0.62rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: .07em;
-      padding: 9px 10px; text-align: left;
-      white-space: nowrap;
+      font-size: 0.6rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: 8px 8px; text-align: left;
+      white-space: nowrap;    /* cabeceras en una línea */
+      overflow: hidden;
+      text-overflow: ellipsis;
       border-right: 1px solid rgba(255,255,255,0.1);
     }
     thead th:last-child { border-right: none; }
@@ -150,10 +148,16 @@
     tbody tr { border-bottom: 1px solid var(--borde); transition: background .1s; }
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #eff6ff; }
+
     tbody td {
-      padding: 7px 10px; vertical-align: middle;
-      font-size: 0.75rem; color: var(--texto);
-      white-space: nowrap;
+      padding: 6px 8px;
+      vertical-align: top;       /* alineado arriba cuando hay salto de línea */
+      font-size: 0.72rem;
+      color: var(--texto);
+      word-break: break-word;    /* rompe palabras largas */
+      white-space: normal;       /* permite salto de línea */
+      overflow: hidden;
+      line-height: 1.35;
     }
 
     tr.disponible { background: var(--verde-bg); }
@@ -162,17 +166,16 @@
     tr.adjudicada:hover { background: #fee2e2; }
 
     .badge {
-      display: inline-block; padding: 2px 8px; border-radius: 20px;
-      font-size: 0.62rem; font-weight: 700; white-space: nowrap;
+      display: inline-block; padding: 2px 7px; border-radius: 20px;
+      font-size: 0.6rem; font-weight: 700; white-space: nowrap;
     }
     .badge-disponible { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
     .badge-adjudicada { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
     .badge-default    { background: var(--surface2); color: var(--texto-dim); }
 
-    /* aviso scroll solo en móvil */
     .scroll-hint {
-      text-align: center; font-size: 0.65rem; color: var(--texto-dim);
-      padding: 6px; background: var(--surface2);
+      text-align: center; font-size: 0.63rem; color: var(--texto-dim);
+      padding: 5px; background: var(--surface2);
       border-top: 1px solid var(--borde);
       display: none;
     }
@@ -180,7 +183,7 @@
     /* ─── CARGA / ERROR ─── */
     #estado-carga { text-align: center; padding: 50px 20px; }
     .spinner {
-      width: 34px; height: 34px;
+      width: 32px; height: 32px;
       border: 3px solid var(--borde); border-top-color: var(--azul-vivo);
       border-radius: 50%; animation: spin .8s linear infinite;
       margin: 0 auto 12px;
@@ -188,32 +191,31 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .error-box {
       background: #fef2f2; border: 1px solid #fca5a5;
-      border-radius: 8px; padding: 14px 18px; color: #b91c1c; font-size: .82rem;
+      border-radius: 8px; padding: 14px; color: #b91c1c; font-size: .8rem;
     }
 
     /* ─── FOOTER ─── */
     footer {
       position: fixed; bottom: 0; left: 0; width: 100%;
       background: var(--azul); color: rgba(255,255,255,0.8);
-      text-align: center; font-size: 0.62rem; padding: 6px; z-index: 80;
+      text-align: center; font-size: 0.6rem; padding: 6px; z-index: 80;
       line-height: 1.6;
     }
 
     /* ─── DESKTOP ─── */
     @media (min-width: 640px) {
-      header { padding: 16px 28px; gap: 18px; }
-      header img { height: 64px; }
-      .header-text h2 { display: block; }
-      main { padding: 18px 16px; }
-      .filters-grid {
-        grid-template-columns: repeat(4, 1fr);  /* 4 columnas en desktop */
-      }
-      .filters-grid .full { grid-column: auto; } /* texto: 1 columna normal */
+      header { padding: 14px 24px; gap: 16px; }
+      header img { height: 60px; }
+      main { padding: 16px 14px; }
+      .filters-grid { grid-template-columns: repeat(4, 1fr); }
+      .filters-grid .full { grid-column: auto; }
     }
 
     /* ─── MÓVIL ─── */
     @media (max-width: 639px) {
       .scroll-hint { display: block; }
+      /* en móvil la tabla hace scroll horizontal si es necesario */
+      table { table-layout: auto; width: max-content; min-width: 100%; }
     }
   </style>
 </head>
@@ -233,7 +235,6 @@
 
 <main>
 
-  <!-- FILTROS -->
   <div class="filters-section">
     <div class="filters-title">🔍 Búsqueda Avanzada</div>
     <div class="filters-grid">
@@ -260,20 +261,18 @@
     </div>
   </div>
 
-  <!-- INFO -->
   <div class="info-bar">
     <div class="result-count" id="result-count"></div>
     <div class="last-update">Actualizado: <span id="last-time">—</span></div>
   </div>
 
-  <!-- TABLA -->
   <div class="table-wrapper">
     <div id="estado-carga">
       <div class="spinner"></div>
-      <p style="color:var(--texto-dim);font-size:.82rem">Cargando datos…</p>
+      <p style="color:var(--texto-dim);font-size:.8rem">Cargando datos…</p>
     </div>
     <div class="table-scroll" id="table-container" style="display:none">
-      <table>
+      <table id="main-table">
         <thead id="table-head"></thead>
         <tbody id="table-body"></tbody>
       </table>
@@ -289,7 +288,7 @@
 </footer>
 
 <script>
-  const SHEET_ID   = "1E1bGvrOn6vmYZxIlRYZfqdQ8DiYXJBtH";
+  const SHEET_ID   = "1X78ctrqUH58bpjj57ibWucgpGrrw4NAG";
   const REFRESH_MS = 5_000;
 
   let allData = [], headers = [];
@@ -334,6 +333,34 @@
     sel.value = cur;
   }
 
+  // Asigna anchos proporcionales según tipo de columna
+  function setColumnWidths(hdrs) {
+    const colgroup = document.createElement("colgroup");
+    hdrs.forEach(h => {
+      const col = document.createElement("col");
+      const name = h.toUpperCase();
+      // columnas cortas: número, código, tipo
+      if (name.includes("N°") || name.includes("NRO") || name === "Nº" ||
+          name.includes("COD") || name.includes("TIPO") || name.includes("J.L") ||
+          name.includes("HORAS") || name.includes("JL"))          col.style.width = "55px";
+      // columnas medianas: nivel, cargo, estado, característica
+      else if (name.includes("NIVEL") || name.includes("CARGO") ||
+               name.includes("ESTADO") || name.includes("CARACT") ||
+               name.includes("MODELO"))                            col.style.width = "100px";
+      // columnas largas: nombre IE, especialidad, docente
+      else if (name.includes("INSTITUCION") || name.includes("IE") ||
+               name.includes("NOMBRE") || name.includes("ESPECIA") ||
+               name.includes("OCUPA") || name.includes("DOCENTE")) col.style.width = "160px";
+      // resto: ancho medio
+      else                                                          col.style.width = "90px";
+      colgroup.appendChild(col);
+    });
+    const table = document.getElementById("main-table");
+    const existing = table.querySelector("colgroup");
+    if (existing) table.removeChild(existing);
+    table.insertBefore(colgroup, table.firstChild);
+  }
+
   function applyFilters() {
     const nivel  = document.getElementById("f-nivel").value.toLowerCase();
     const cargo  = document.getElementById("f-cargo").value.toLowerCase();
@@ -349,10 +376,8 @@
     });
 
     renderTable(filtered);
-
-    const total = allData.length;
     document.getElementById("result-count").innerHTML =
-      `Mostrando <strong>${filtered.length}</strong> de <strong>${total}</strong> plazas`;
+      `Mostrando <strong>${filtered.length}</strong> de <strong>${allData.length}</strong> plazas`;
   }
 
   function renderTable(filtered) {
@@ -360,11 +385,11 @@
     const tbody = document.getElementById("table-body");
 
     if (!thead.innerHTML)
-      thead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
+      thead.innerHTML = "<tr>" + headers.map(h => `<th title="${h}">${h}</th>`).join("") + "</tr>";
 
     if (!filtered.length) {
       tbody.innerHTML = `<tr><td colspan="${headers.length}"
-        style="text-align:center;padding:36px;color:var(--texto-dim);white-space:normal;font-size:.8rem">
+        style="text-align:center;padding:32px;color:var(--texto-dim);white-space:normal;font-size:.78rem">
         No se encontraron plazas con los filtros seleccionados.</td></tr>`;
       return;
     }
@@ -397,6 +422,7 @@
       if (colCargo >= 0) populateSelect("f-cargo", colCargo);
 
       if (first) {
+        setColumnWidths(headers);
         document.getElementById("estado-carga").style.display    = "none";
         document.getElementById("table-container").style.display = "block";
         ["f-nivel","f-cargo","f-estado","f-busca"].forEach(id =>
