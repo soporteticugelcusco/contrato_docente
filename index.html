@@ -65,7 +65,6 @@
       50%      { transform: scale(1.8); opacity: 0.35; }
     }
 
-    /* ─── MAIN ─── */
     main { max-width: 100%; margin: 0 auto; padding: 12px 10px; }
 
     /* ─── FILTROS ─── */
@@ -119,13 +118,6 @@
     .table-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
     .table-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
 
-    /*
-      CLAVE: width:max-content → la tabla crece hasta
-      el ancho que necesita su contenido real.
-      table-layout:auto → cada columna toma el ancho
-      del texto más largo que contiene.
-      NO hay max-width en las celdas → sin distorsión.
-    */
     table {
       width: max-content;
       min-width: 100%;
@@ -152,9 +144,8 @@
       padding: 7px 12px;
       font-size: 0.73rem;
       color: var(--texto);
-      white-space: nowrap;    /* una línea por celda → ancho exacto al texto */
+      white-space: nowrap;
       vertical-align: middle;
-      /* SIN max-width, SIN overflow:hidden, SIN text-overflow */
     }
 
     tr.disponible { background: var(--verde-bg); }
@@ -176,7 +167,6 @@
       border-top: 1px solid var(--borde); display: none;
     }
 
-    /* ─── CARGA / ERROR ─── */
     #estado-carga { text-align: center; padding: 50px 20px; }
     .spinner {
       width: 32px; height: 32px;
@@ -190,7 +180,6 @@
       border-radius: 8px; padding: 14px; color: #b91c1c; font-size: .8rem;
     }
 
-    /* ─── FOOTER ─── */
     footer {
       position: fixed; bottom: 0; left: 0; width: 100%;
       background: var(--azul); color: rgba(255,255,255,0.8);
@@ -198,7 +187,6 @@
       line-height: 1.6;
     }
 
-    /* ─── DESKTOP ─── */
     @media (min-width: 640px) {
       header { padding: 14px 24px; gap: 16px; }
       header img { height: 60px; }
@@ -206,8 +194,6 @@
       .filters-grid { grid-template-columns: repeat(4, 1fr); }
       .filters-grid .full { grid-column: auto; }
     }
-
-    /* ─── MÓVIL ─── */
     @media (max-width: 639px) {
       .scroll-hint { display: block; }
     }
@@ -228,7 +214,6 @@
 </header>
 
 <main>
-
   <div class="filters-section">
     <div class="filters-title">🔍 Búsqueda Avanzada</div>
     <div class="filters-grid">
@@ -273,7 +258,6 @@
     </div>
     <div class="scroll-hint">← Desliza para ver más columnas →</div>
   </div>
-
 </main>
 
 <footer>
@@ -295,20 +279,55 @@
     return parseCSV(await resp.text());
   }
 
+  // ─── PARSER CSV ROBUSTO ───────────────────────────────────────
+  // Maneja: \r\n (Windows), \n (Unix), campos entre comillas,
+  // comas dentro de comillas, saltos de línea dentro de comillas.
   function parseCSV(text) {
-    const parse = line => {
-      const out = []; let cur = ""; let q = false;
-      for (const ch of line) {
-        if (ch === '"') { q = !q; }
-        else if (ch === ',' && !q) { out.push(cur.trim()); cur = ""; }
-        else cur += ch;
+    // Normalizar saltos de línea: quitar \r para trabajar solo con \n
+    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').trim();
+
+    const rows = [];
+    let row = [];
+    let cell = '';
+    let inQuotes = false;
+    let i = 0;
+
+    while (i < text.length) {
+      const ch = text[i];
+
+      if (inQuotes) {
+        if (ch === '"') {
+          // comilla doble escapada ("")
+          if (text[i + 1] === '"') { cell += '"'; i += 2; continue; }
+          inQuotes = false;
+        } else {
+          cell += ch;
+        }
+      } else {
+        if (ch === '"') {
+          inQuotes = true;
+        } else if (ch === ',') {
+          row.push(cell.trim());
+          cell = '';
+        } else if (ch === '\n') {
+          row.push(cell.trim());
+          cell = '';
+          if (row.some(c => c !== '')) rows.push(row);
+          row = [];
+        } else {
+          cell += ch;
+        }
       }
-      out.push(cur.trim());
-      return out;
-    };
-    const lines = text.trim().split("\n");
-    return { headers: parse(lines[0]), rows: lines.slice(1).map(parse) };
+      i++;
+    }
+    // última celda/fila
+    row.push(cell.trim());
+    if (row.some(c => c !== '')) rows.push(row);
+
+    if (rows.length === 0) return { headers: [], rows: [] };
+    return { headers: rows[0], rows: rows.slice(1) };
   }
+  // ─────────────────────────────────────────────────────────────
 
   function findCol(name) {
     return headers.findIndex(h => h.toUpperCase().includes(name));
@@ -351,14 +370,11 @@
     const tbody = document.getElementById("table-body");
 
     if (!thead.innerHTML)
-      thead.innerHTML = "<tr>" +
-        headers.map(h => `<th>${h}</th>`).join("") +
-      "</tr>";
+      thead.innerHTML = "<tr>" + headers.map(h => `<th>${h}</th>`).join("") + "</tr>";
 
     if (!filtered.length) {
       tbody.innerHTML = `<tr><td colspan="${headers.length}"
-        style="text-align:center;padding:32px;color:var(--texto-dim);
-               white-space:normal;font-size:.78rem">
+        style="text-align:center;padding:32px;color:var(--texto-dim);white-space:normal;font-size:.78rem">
         No se encontraron plazas con los filtros seleccionados.</td></tr>`;
       return;
     }
@@ -386,7 +402,8 @@
     try {
       const { headers: hdrs, rows } = await fetchData();
       const first = headers.length === 0;
-      headers = hdrs; allData = rows;
+      headers = hdrs;
+      allData = rows;
       colEstado = findCol("ESTADO");
       colNivel  = findCol("NIVEL");
       colCargo  = findCol("CARGO");
