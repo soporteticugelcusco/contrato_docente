@@ -66,7 +66,7 @@
     }
 
     /* ─── MAIN ─── */
-    main { max-width: 1500px; margin: 0 auto; padding: 12px 10px; }
+    main { max-width: 100%; margin: 0 auto; padding: 12px 10px; }
 
     /* ─── FILTROS ─── */
     .filters-section {
@@ -112,23 +112,23 @@
     .table-scroll {
       overflow-x: auto;
       overflow-y: auto;
-      max-height: 68vh;
+      max-height: 70vh;
       -webkit-overflow-scrolling: touch;
     }
-    .table-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .table-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .table-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
     .table-scroll::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
 
     /*
-      ESTRATEGIA DE COLUMNAS:
-      - table-layout: auto  → el navegador calcula anchos reales
-      - max-width en cada td → limita el ancho máximo
-      - overflow: hidden + text-overflow: ellipsis + white-space: nowrap
-        → muestra "..." cuando el texto no cabe
-      - title en cada celda → tooltip con texto completo al pasar el mouse
+      CLAVE: width:max-content → la tabla crece hasta
+      el ancho que necesita su contenido real.
+      table-layout:auto → cada columna toma el ancho
+      del texto más largo que contiene.
+      NO hay max-width en las celdas → sin distorsión.
     */
     table {
-      width: 100%;
+      width: max-content;
+      min-width: 100%;
       border-collapse: collapse;
       table-layout: auto;
     }
@@ -138,7 +138,7 @@
       background: var(--azul); color: #fff;
       font-size: 0.63rem; font-weight: 700;
       text-transform: uppercase; letter-spacing: .06em;
-      padding: 9px 8px; text-align: left;
+      padding: 9px 12px; text-align: left;
       white-space: nowrap;
       border-right: 1px solid rgba(255,255,255,0.12);
     }
@@ -148,18 +148,14 @@
     tbody tr:last-child { border-bottom: none; }
     tbody tr:hover { background: #eff6ff; }
 
-    /* Celda base: trunca el texto con "..." */
     tbody td {
-      padding: 7px 8px;
+      padding: 7px 12px;
       font-size: 0.73rem;
       color: var(--texto);
-      max-width: 160px;          /* ancho máximo por celda        */
-      white-space: nowrap;       /* texto en una sola línea        */
-      overflow: hidden;          /* oculta lo que sobra            */
-      text-overflow: ellipsis;   /* muestra "..." al final         */
-      cursor: default;
+      white-space: nowrap;    /* una línea por celda → ancho exacto al texto */
+      vertical-align: middle;
+      /* SIN max-width, SIN overflow:hidden, SIN text-overflow */
     }
-    /* al pasar el mouse se ve el contenido completo (via title) */
 
     tr.disponible { background: var(--verde-bg); }
     tr.disponible:hover { background: #dcfce7; }
@@ -167,7 +163,7 @@
     tr.adjudicada:hover { background: #fee2e2; }
 
     .badge {
-      display: inline-block; padding: 2px 8px; border-radius: 20px;
+      display: inline-block; padding: 2px 9px; border-radius: 20px;
       font-size: 0.62rem; font-weight: 700; white-space: nowrap;
     }
     .badge-disponible { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
@@ -214,7 +210,6 @@
     /* ─── MÓVIL ─── */
     @media (max-width: 639px) {
       .scroll-hint { display: block; }
-      tbody td { max-width: 120px; }
     }
   </style>
 </head>
@@ -355,16 +350,15 @@
     const thead = document.getElementById("table-head");
     const tbody = document.getElementById("table-body");
 
-    // Cabecera solo la primera vez
     if (!thead.innerHTML)
       thead.innerHTML = "<tr>" +
-        headers.map(h => `<th title="${h}">${h}</th>`).join("") +
+        headers.map(h => `<th>${h}</th>`).join("") +
       "</tr>";
 
     if (!filtered.length) {
       tbody.innerHTML = `<tr><td colspan="${headers.length}"
         style="text-align:center;padding:32px;color:var(--texto-dim);
-               white-space:normal;font-size:.78rem;max-width:none">
+               white-space:normal;font-size:.78rem">
         No se encontraron plazas con los filtros seleccionados.</td></tr>`;
       return;
     }
@@ -376,15 +370,12 @@
 
       const cells = row.map((cell, i) => {
         const val = (cell !== undefined && cell !== "") ? cell : "—";
-
         if (i === colEstado) {
           const bc = est === "DISPONIBLE" ? "badge-disponible"
                    : est === "ADJUDICADA" ? "badge-adjudicada" : "badge-default";
-          // badge no necesita truncar
-          return `<td style="max-width:none"><span class="badge ${bc}">${val}</span></td>`;
+          return `<td><span class="badge ${bc}">${val}</span></td>`;
         }
-        // title muestra el texto completo al pasar el mouse
-        return `<td title="${val}">${val}</td>`;
+        return `<td>${val}</td>`;
       }).join("");
 
       return `<tr class="${cls}">${cells}</tr>`;
